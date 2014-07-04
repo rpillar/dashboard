@@ -31,10 +31,12 @@ yr_14 <- subset(cafe_income, Year == 14)
 yr_13 <- subset(cafe_income, Year == 13) 
 inc <- yr_14
 
-weeks_14  <- aggregate(Total~Week,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
-months_14 <- aggregate(Total~Month,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
-weeks_13  <- aggregate(Total~Week,data=yr_13,FUN=sum)
-months_13 <- aggregate(Total~Month,data=yr_13,FUN=sum)
+weeks_14     <- aggregate(Total~Week,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
+weeks_14_cn  <- aggregate(CustNumbers~Week,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
+months_14    <- aggregate(Total~Month,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
+weeks_13     <- aggregate(Total~Week,data=yr_13,FUN=sum)
+weeks_13_cn  <- aggregate(CustNumbers~Week,data=yr_13,FUN=sum, na.rm=FALSE, na.action=NULL)
+months_13    <- aggregate(Total~Month,data=yr_13,FUN=sum)
 
 # forecast data 
 # cafe sales - assumes takings of 43,330 for the year - 833.27 per week.
@@ -95,7 +97,7 @@ wk_avg[48:52] <- df.summary$weekly_avg[12]
 # shiny stuff ...
 shinyServer(function(input, output) {
   
-  output$plot3 <- renderPlot({ 
+  output$plot1 <- renderPlot({ 
     
     # base plot
     data <- weeks_14
@@ -127,6 +129,20 @@ shinyServer(function(input, output) {
     # display plot
     print(g)
     
+  })
+  
+  output$plot2 <- renderPlot({
+    # base plot
+    data <- weeks_14_cn
+    lineType <- 'b' 
+    xLabel <- 'Week Number'
+    yRange <- c(0,600)
+    h <- ggplot(data,aes(x=Week,y=CustNumbers))
+    h <- h + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
+    h <- h + geom_line(data=weeks_13_cn,aes(x=Week,y=CustNumbers),alpha = 0.3) + geom_point(data=weeks_13_cn,aes(x=Week,y=CustNumbers),size=4,alpha=0.2)
+    
+    # display plot
+    print(h)
   })
   
 })
