@@ -77,9 +77,11 @@ shinyUI(navbarPage(
     fluidRow(
       
       column(2),
-      column(2),
-      column(6,
-       plotOutput('plot2')   
+      column(3,
+        plotOutput('plot2')
+      ),
+      column(5,
+       plotOutput('plot3')   
       ),
       column(2)
     )

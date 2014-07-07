@@ -29,6 +29,7 @@ cafe_income <- read.csv('data/income_2013-14.csv', header=TRUE,sep=';')
 # subset - yr_14 / yr_13
 yr_14 <- subset(cafe_income, Year == 14) 
 yr_13 <- subset(cafe_income, Year == 13) 
+yr_13$Day <- factor(yr_13$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
 inc <- yr_14
 
 weeks_14     <- aggregate(Total~Week,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
@@ -130,8 +131,19 @@ shinyServer(function(input, output) {
     print(g)
     
   })
-  
+
   output$plot2 <- renderPlot({
+    # base plot
+    data <- yr_13
+    xLabel <- 'Day of Week'
+    yRange <- c(0,600)
+    j <- ggplot(data,aes(x=Day,y=CustNumbers))
+    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Blues') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
+    # display plot
+    print(j)
+  })
+  
+  output$plot3 <- renderPlot({
     # base plot
     data <- weeks_14_cn
     lineType <- 'b' 
