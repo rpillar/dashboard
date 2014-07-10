@@ -106,7 +106,7 @@ shinyServer(function(input, output) {
     xLabel <- 'Week Number'
     yRange <- c(0,1500)
     g <- ggplot(data,aes(x=Week,y=Total))
-    g <- g + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,1500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
+    g <- g + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,1500) + labs(title='Cafe Takings - 2013 / 2014',x='Week Number',y='Amount') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
     
     # current year trend
     if ( input$trend_2014 == TRUE ) {
