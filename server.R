@@ -98,6 +98,13 @@ wk_avg[48:52] <- df.summary$weekly_avg[12]
 # shiny stuff ...
 shinyServer(function(input, output) {
   
+  # Generate a summary of the data
+  #output$summary <- renderPrint({
+  #  summary(weeks_14)
+  #})
+  
+  ## cafe takings ##
+  
   output$plot1 <- renderPlot({ 
     
     # base plot
@@ -106,41 +113,48 @@ shinyServer(function(input, output) {
     xLabel <- 'Week Number'
     yRange <- c(0,1500)
     g <- ggplot(data,aes(x=Week,y=Total))
-    g <- g + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,1500) + labs(title='Cafe Takings - 2013 / 2014',x='Week Number',y='Amount') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
+    g <- g + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,1500) + labs(title='Cafe Takings - 2013 / 2014 (by Week)',x='Week Number',y='Amount') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
     
     # current year trend
-    if ( input$trend_2014 == TRUE ) {
-      g <- g + geom_smooth(data=weeks_14, aes(x=Week,y=Total),method='lm',na.rm=TRUE)
-    }
+    #if ( input$trend_2014 == TRUE ) {
+    #  g <- g + geom_smooth(data=weeks_14, aes(x=Week,y=Total),method='lm',na.rm=TRUE)
+    #}
     # current year forecast
-    if ( input$forecast_2014 == TRUE ) {
-      g <- g + geom_line(data=df.cfs_forecast, aes(x=Week,y=Total),color='green',size=2,alpha=0.4)
-    }
+    #if ( input$forecast_2014 == TRUE ) {
+    #  g <- g + geom_line(data=df.cfs_forecast, aes(x=Week,y=Total),color='green',size=2,alpha=0.4)
+    #}
     
     # compare to last year
-    if ( input$compare_2013 == TRUE ) {
+    #if ( input$compare_2013 == TRUE ) {
       g <- g + geom_line(data = weeks_13,aes(x=Week,y=Total),alpha = 0.3) + geom_point(data=weeks_13,aes(x=Week,y=Total),size=4,alpha=0.2)
-    }
+    #}
     
     # last years trend
-    if ( input$trend_2013 == TRUE ) {
-      g <- g + geom_smooth(data=weeks_13, aes(x=Week,y=Total),method='lm')
-    }
+    #if ( input$trend_2013 == TRUE ) {
+    #  g <- g + geom_smooth(data=weeks_13, aes(x=Week,y=Total),method='lm')
+    #}
     
     # display plot
     print(g)
     
   })
+  
+  # cafe takings - table values
+  output$avg_2013 <- renderText({ '2013.22' })
+  output$avg_2014 <- renderText({ '1913.22' })
+  
+  ## customer details ##
 
   output$plot2 <- renderPlot({
     # base plot
     data <- yr_13
-    xLabel <- 'Day of Week'
     yRange <- c(0,600)
     j <- ggplot(data,aes(x=Day,y=CustNumbers))
-    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Blues') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
+    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Blues') + labs(title='Customers (by Day)',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
+    
     # display plot
     print(j)
+    
   })
   
   output$plot3 <- renderPlot({
