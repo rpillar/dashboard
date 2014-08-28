@@ -12,11 +12,14 @@ library(ggplot2)
 
 # project income - get data / pre-process
 proj_income <- read.csv('data/project_inc_exp_2014.csv', header=TRUE,sep=',')
+
+# set 'control' data
 graphx_labels <- c('June','July','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May')
 first_month <- 3
 last_month = first_month + 11
 plot_data <- proj_income[c(first_month:last_month),]
 yaxis_lim <- min(plot_data$Profit)
+
 #### just change to use barplot ####
 plot_data <- matrix(NA,2,12)
 plot_data[1,1:12] <- proj_income$Income[1:12]
@@ -32,6 +35,7 @@ yr_13 <- subset(cafe_income, Year == 13)
 yr_13$Day <- factor(yr_13$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
 inc <- yr_14
 
+# create 'Week' / 'Monthly' figures
 weeks_14     <- aggregate(Total~Week,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
 weeks_14_cn  <- aggregate(CustNumbers~Week,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
 months_14    <- aggregate(Total~Month,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
@@ -95,6 +99,26 @@ wk_avg[40:43] <- df.summary$weekly_avg[10]
 wk_avg[44:47] <- df.summary$weekly_avg[11]
 wk_avg[48:52] <- df.summary$weekly_avg[12]
 
+# calculate takings details
+cafe_inc_avg_13 <- mean(weeks_13$Total,na.rm=TRUE)
+cafe_inc_avg_13 <- round(cafe_inc_avg_13,digits=2)
+cafe_inc_avg_14 <- mean(weeks_14$Total,na.rm=TRUE)
+cafe_inc_avg_14 <- round(cafe_inc_avg_14,digits=2)
+cafe_inc_max_13 <- max(weeks_13$Total,na.rm=TRUE)
+cafe_inc_max_14 <- max(weeks_14$Total,na.rm=TRUE)
+cafe_min <- subset(weeks_13,Total > 0)
+cafe_inc_min_13 <- min(cafe_min$Total,na.rm=TRUE)
+cafe_inc_min_13 <- round(cafe_inc_min_13,digits=2)
+cafe_min <- subset(weeks_14,Total > 0)
+cafe_inc_min_14 <- min(cafe_min$Total,na.rm=TRUE)
+cafe_inc_min_14 <- round(cafe_inc_min_14,digits=2)
+
+# create variance data for 2013 / 2014
+yr_13_Var <- yr_13
+yr_13_Var$Month <- factor(yr_13_Var$Month, labels = c('Apr', 'May','Jun','Jul','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar'))
+yr_14_Var <- yr_14
+yr_14_Var$Month <- factor(yr_14_Var$Month, labels = c('Apr', 'May','Jun','Jul','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar'))
+
 # shiny stuff ...
 shinyServer(function(input, output) {
   
@@ -140,24 +164,45 @@ shinyServer(function(input, output) {
   })
   
   # cafe takings - table values
-  output$avg_2013 <- renderText({ '2013.22' })
-  output$avg_2014 <- renderText({ '1913.22' })
+  output$avg_2013 <- renderText({ cafe_inc_avg_13 })
+  output$avg_2014 <- renderText({ cafe_inc_avg_14 })
+  output$max_2013 <- renderText({ cafe_inc_max_13 })
+  output$max_2014 <- renderText({ cafe_inc_max_14 })
+  output$min_2013 <- renderText({ cafe_inc_min_13 })
+  output$min_2014 <- renderText({ cafe_inc_min_14 })
+  
+  ## takings variance ##
+  output$plot2a <- renderPlot({
+    k <- ggplot(yr_13_Var,aes(x=Month,y=Takings))
+    k <- k + geom_boxplot(aes(fill=Month)) + ylim(0,600) + labs(title='Cafe Takings - 2013',x='Month',y='Daily Takings') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
+    
+    # display plot
+    print(k)
+  })
+  
+  output$plot2b <- renderPlot({
+    l <- ggplot(yr_14_Var,aes(x=Month,y=Takings))
+    l <- l + geom_boxplot(aes(fill=Month)) + ylim(0,600) + labs(title='Cafe Takings - 2014',x='Month',y='Daily Takings') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
+    
+    # display plot
+    print(l)
+  })
   
   ## customer details ##
 
-  output$plot2 <- renderPlot({
+  output$plot3 <- renderPlot({
     # base plot
     data <- yr_13
     yRange <- c(0,600)
     j <- ggplot(data,aes(x=Day,y=CustNumbers))
-    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Blues') + labs(title='Customers (by Day)',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
+    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Blues') + labs(title='Customers (by Day) - 2014',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
     
     # display plot
     print(j)
     
   })
   
-  output$plot3 <- renderPlot({
+  output$plot4 <- renderPlot({
     # base plot
     data <- weeks_14_cn
     lineType <- 'b' 
@@ -166,6 +211,7 @@ shinyServer(function(input, output) {
     h <- ggplot(data,aes(x=Week,y=CustNumbers))
     h <- h + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
     h <- h + geom_line(data=weeks_13_cn,aes(x=Week,y=CustNumbers),alpha = 0.3) + geom_point(data=weeks_13_cn,aes(x=Week,y=CustNumbers),size=4,alpha=0.2)
+    h <- h + labs(title='Customers Numbers (by Week) - 2013 / 2014',x='Week Number',y='Customer Numbers')
     
     # display plot
     print(h)

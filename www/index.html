@@ -10,61 +10,104 @@
   <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
   
   <style>
-    body {
-      padding-top: 70px;
-    }
-    
-    /* bootstrap overrides */
-    /*.navbar-inverse {
-      background-color: #34495e;
-    }*/
     .container {
       width: 80%;
-    }
-    .nav li a {
-      text-transform: uppercase;
-      font-size: 20px;
-    }
-    .navbar-inverse .navbar-nav > li > a {
-      color: white;
+    }    
+    .panel-default > .panel-heading {
+      background-color: #fbfcfc;;
+      color: black;
     }
     
-    .panel-default > .panel-heading {
-      background-color: #34495e;;
-      color: white;
+    #navbar {
+      position: fixed;
+      width: 100%;
+      height: 85px;
+      padding-top: 20px;
+      border-bottom: 1px solid lightgray;
+      z-index: 20;
+      background-color: #fbfcfc;
+      opacity: 0.9;
+    }
+    #navbar .brand {
+      display: inline;
+      font-size: 36px;
+      text-transform: uppercase
+    }
+    #navbar .about {
+      display: inline;
+      font-size: 24px;
+      text-transform: uppercase;
+      float: right;
+      margin-top: 10px;
+    }
+    
+    #pagenav {
+      position: fixed;
+      left: 0px;
+      top: 200px;
+      width: 70px;
+      height: 40%;
+      background-color: #fbfcfc;
+      display: table;
+      z-index: 100;
+      border-top: 2px solid lightgray;
+      border-right: 2px solid lightgray;
+      border-bottom: 2px solid lightgray;
+      border-radius: 0 5px 5px 0;
+    }
+    #icondiv {
+      position: relative;
+      display: table-cell;
+      vertical-align: middle;
+      background-color: #fbfcfc;
+      width: 70px;
+    }
+    #dashboard-link:hover span {
+      font-size: 34px;
+    }
+    #customers-link:hover span {
+      font-size: 34px;
+    }
+    #analysis-link:hover span {
+      font-size: 34px;
+    }
+    
+    .content-top {
+      padding-top: 90px;
     }
   </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+  <div id="navbar">
     <div class="container">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#" style="font-size:24px;font-weight:400;text-transform:uppercase;color:white;"><span style="border-bottom:1px solid gray;">dash<span style="font-weight:600;">board</span></span></a>
+      <h3 class="brand">Dashboard</h2>
+      <h3 class="about"><a href="#" style="text-decoration: none;color: black;" data-toggle="modal" data-target="#aboutModal">About</a></h3>
+    </div>
+  </div>
+  
+  <div id="pagenav">
+    <div id="icondiv">
+      <div>
+        <a href="#" id="dashboard-link" style="text-decoration:none;">
+          <span class="glyphicon glyphicon-dashboard" style="margin-left:15px;font-size:32px;color:#1ABC9C;"></span>
+        </a>  
       </div>
+      <div style="margin-top:15px;">
+        <a href="#" id="customers-link" style="text-decoration:none;">
+          <span class="glyphicon glyphicon-user" style="margin-left:15px;font-size:32px;color:#2ECC71;"></span>
+        </a>
+      </div>
+      <div style="margin-top:15px;">
+        <a href="#" id="analysis-link" style="text-decoration:none;">
+          <span class="glyphicon glyphicon-stats" style="margin-left:15px;font-size:32px;color:#3498DB;"></span>
+        </a>
+      </div>
+    </div>
+  </div>
 
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">CAFE</a></li>
-          <li><a href="#">TRAINING</a></li>        
-        </ul> 
-        
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">About</a></li>        
-        </ul>
-      
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav> 
+  <div class="content-top"></div>
   
   <div class="row">
     <div class="container">
@@ -74,19 +117,20 @@
     </div>
   </div>
   
+  <div class="row">
+    <div class="container">
+      <div>
+        <h3 style="font-family: 'Ubuntu', sans-serif;font-size:24px;"><span style="border-bottom:1px solid gray;">Cafe Takings</span></h3>
+      </div>
+    </div>
+  </div>
+  
   <div class="row "><br /></div>
   
   <div class="row">
     <div class="container">
       <div class="col-md-8"> 
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title" style="width:20%;margin-left:auto;margin-right:auto;font-family:Ubuntu;font-size:20px;font-weight:300;">Takings</h3>
-          </div>
-          <div class="panel-body">
-            <div id="plot1" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
-          </div>
-        </div>
+        <div id="plot1" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
       </div>
       <div class="col-md-4">  
         <div class="panel panel-default">
@@ -111,30 +155,16 @@
                 <td>
                   Max
                 </td>
-                <td></td>
-                <td></td>  
+                <td id="max_2013" class="shiny-text-output" style="text-align:center;"></td>
+                <td id="max_2014" class="shiny-text-output" style="text-align:center;"></td>  
               </tr>
               <tr>
                 <td>
                   Min
                 </td>
-                <td></td>  
-                <td></td>  
-              </tr>
-              <tr>
-                <td>
-                  Profit / Loss
-                </td>
-                <td></td>     
-                <td></td>  
-              </tr>
-              <tr>
-                <td>
-                  Forecast
-                </td>
-                <td></td>     
-                <td></td>  
-              </tr>
+                <td id="min_2013" class="shiny-text-output" style="text-align:center;"></td>  
+                <td id="min_2014" class="shiny-text-output" style="text-align:center;"></td>  
+              </tr>                         
             </table>
           </div>
         </div>
@@ -142,24 +172,70 @@
     </div>
   </div> 
   
-  <div class="row"><div class="container"><hr /></div></div>
+  <div class="row">
+    <div class="container">
+      <div>
+        <h3 style="font-family: 'Ubuntu', sans-serif;font-size:24px;"><span style="border-bottom:1px solid gray;">Cafe Takings - Daily Variance (by Month) for 2013 /2014</span></h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row "><br /></div>
+  
+  <div class="row ">
+      <div class="container">
+        <div class="col-md-6">
+          <div id="plot2a" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
+        </div>
+        <div class="col-md-6">
+          <div id="plot2b" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
+        </div>
+      </div>
+    </div>
+  
+  <div class="row"><div class="container"><hr style="background-color:black;color:black;"/></div></div>
+  
+  <div class="row">
+    <div class="container">
+      <div>
+        <h3 style="font-family: 'Ubuntu', sans-serif;font-size:24px;"><span style="border-bottom:1px solid gray;">Customer Details</span></h3>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row "><br /></div>
   
   <div class="row">
     <div class="container">
       <div class="col-md-4"> 
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title" style="width:20%;margin-left:auto;margin-right:auto;font-family:Ubuntu;font-size:20px;font-weight:300;">Customers</h3>
-          </div>
-          <div class="panel-body">
-            <div id="plot2" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
-          </div>
-        </div>
+        <div id="plot3" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
       </div>
-      <div class="col-md-8">        
+      <div class="col-md-8"> 
+        <div id="plot4" class="shiny-plot-output" style="width: 100%; height: 300px"></div>  
       </div>
     </div>
   </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Dashboard</h4>
+        </div>
+        <div class="modal-body">
+        ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- scripts -->
+  <script src="shared/bootstrap-3/js/bootstrap.min.js"></script>
 
 </body>
 
