@@ -4,7 +4,7 @@
   <script src="shared/jquery.js" type="text/javascript"></script>
   <script src="shared/shiny.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="shared/shiny.css"/>
-  <link rel="stylesheet" type="text/css" href="shared/bootstrap-3/css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="bootstrap-3/css/bootstrap.css"/>
   
   <!--<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>-->
   <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
@@ -100,7 +100,7 @@
         </a>
       </div>
       <div style="margin-top:15px;">
-        <a class="dd_link" href="#" id="analysis-link" style="text-decoration:none;">
+        <a class="dd_link" href="#analysis" id="analysis-link" style="text-decoration:none;">
           <span class="glyphicon glyphicon-stats" style="margin-left:15px;font-size:32px;color:#3498DB;"></span>
         </a>
       </div>
@@ -215,7 +215,19 @@
       </div>
     </div>
   </div>
+
+  <div class="row"><div class="container"><hr style="background-color:black;color:black;"/></div></div>
+
+  <div class="row">
+    <div class="container">
+      <div id="analysis">
+        <h3 style="font-family: 'Ubuntu', sans-serif;font-size:24px;"><span style="border-bottom:1px solid gray;">Cafe - Analysis</span></h3>
+      </div>
+    </div>
+  </div>
   
+  <div class="row "><br /></div>
+
   <!-- Modal -->
   <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -236,15 +248,15 @@
   
   <!-- scripts -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="shared/bootstrap-3/js/bootstrap.min.js"></script>
+  <script src="bootstrap-3/js/bootstrap.min.js"></script>
   
   <script>
     function scrollNav() {
-      $('div a .dd_link').click(function(){
+      $('a.dd_link').click(function(){
         //Animate
         console.log('I am moving ...');
         $('html, body').stop().animate({
-          scrollTop: $( $(this).attr('href') ).offset().top - 90
+          scrollTop: $( $(this).attr('href') ).offset().top - 180
         }, 400);
         return false;
       });
