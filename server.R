@@ -27,7 +27,7 @@ plot_data[2,1:12] <- proj_income$Expenses[1:12]
 
 # cafe income - get data / pre-process
 curr_yr <- 14
-cafe_income <- read.csv('data/income_2013-14.csv', header=TRUE,sep=';')
+cafe_income <- read.csv('data/income_2013-14.csv', header=TRUE,sep=',')
 
 # subset - yr_14 / yr_13
 yr_14 <- subset(cafe_income, Year == 14) 
