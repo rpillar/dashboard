@@ -10,22 +10,30 @@ library(plyr)
 library(shiny)
 library(ggplot2)
 
-# project income - get data / pre-process
-proj_income <- read.csv('data/project_inc_exp_2014.csv', header=TRUE,sep=',')
+## set 'control' data ##
+#-----------------------
+graphx_labels <- c('Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar')
 
-# set 'control' data
-graphx_labels <- c('June','July','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May')
-first_month <- 3
-last_month = first_month + 11
-plot_data <- proj_income[c(first_month:last_month),]
-yaxis_lim <- min(plot_data$Profit)
+## cafe expenses - get data / pre-process ##
+#-------------------------------------------
+cafe_expenses <- read.csv('data/cafe_expenses.csv', header=TRUE,sep=',')
 
-#### just change to use barplot ####
-plot_data <- matrix(NA,2,12)
-plot_data[1,1:12] <- proj_income$Income[1:12]
-plot_data[2,1:12] <- proj_income$Expenses[1:12]
+# subset - yr_14 / yr_13
+exp_yr_14 <- subset(cafe_expenses, Year == 14) 
+exp_yr_13 <- subset(cafe_expenses, Year == 13) 
+
+# create 'Monthly' figures
+exp_13_mths <- data.frame(Month=integer(0),Total=integer(0))
+exp_14_mths <- data.frame(Month=integer(0),Total=integer(0))
+for (i in 1:12) {
+  exp_13_mths <- rbind(exp_13_mths,data.frame(Month=i,Total=rowSums( exp_yr_13[i,3:21],na.rm=TRUE ) ) )
+}
+for (i in 1:12) {
+  exp_14_mths <- rbind(exp_14_mths,data.frame(Month=i,Total=rowSums( exp_yr_14[i,3:21],na.rm=TRUE ) ) )
+}
 
 # cafe income - get data / pre-process
+#-------------------------------------
 curr_yr <- 14
 cafe_income <- read.csv('data/income_2013-14.csv', header=TRUE,sep=',')
 
@@ -66,7 +74,7 @@ pexp_forecast[1:start] <- NA
 start <- (12 - curr_month) + 1 
 pexp_forecast[start:12] <- 6776.33 
 
-# create 'monthly (weekly/daily) averages and max/min' dataframe
+# income - create 'monthly (weekly/daily) averages and max/min' dataframe
 df.summary <- data.frame(total=integer(0),weekly_avg=integer(0),daily_avg=integer(0),max=integer(0),min=integer(0))
 x <- c()
 for( i in 1:12) {
@@ -84,7 +92,7 @@ for( i in 1:12) {
   df.summary <- rbind(df.summary,x)
 } 
 
-# create monthly average vector - assumes '4/4/5' x 4
+# income - create monthly average vector - assumes '4/4/5' x 4
 wk_avg <- c(1:52)
 wk_avg[1:4]   <- df.summary$weekly_avg[1]
 wk_avg[5:8]   <- df.summary$weekly_avg[2]
@@ -115,17 +123,12 @@ cafe_inc_min_14 <- round(cafe_inc_min_14,digits=2)
 
 # create variance data for 2013 / 2014
 yr_13_Var <- yr_13
-yr_13_Var$Month <- factor(yr_13_Var$Month, labels = c('Apr', 'May','Jun','Jul','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar'))
+yr_13_Var$Month <- factor(yr_13_Var$Month, labels = graphx_labels)
 yr_14_Var <- yr_14
-yr_14_Var$Month <- factor(yr_14_Var$Month, labels = c('Apr', 'May','Jun','Jul','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar'))
+yr_14_Var$Month <- factor(yr_14_Var$Month, labels = graphx_labels)
 
 # shiny stuff ...
 shinyServer(function(input, output) {
-  
-  # Generate a summary of the data
-  #output$summary <- renderPrint({
-  #  summary(weeks_14)
-  #})
   
   ## cafe takings ##
   
@@ -188,9 +191,26 @@ shinyServer(function(input, output) {
     print(l)
   })
   
+  ## expenses ##
+  
+  output$plot3 <- renderPlot({
+    # base plot
+    data <- exp_14_mths
+    lineType <- 'b' 
+    xLabel <- 'Month'
+    yRange <- c(0,8000)
+    m <- ggplot(data,aes(x=Month,y=Total))
+    m <- m + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
+    m <- m + geom_line(data=exp_13_mths,aes(x=Month,y=Total),alpha = 0.3) + geom_point(data=exp_13_mths,aes(x=Month,y=Total),size=4,alpha=0.2)
+    m <- m + labs(title='Cafe Expenses - 2013 / 2014',x='Month',y='Amount')
+    
+    # display plot
+    print(m)
+  })
+  
   ## customer details ##
 
-  output$plot3 <- renderPlot({
+  output$plot4a <- renderPlot({
     # base plot
     data <- yr_13
     yRange <- c(0,600)
@@ -202,7 +222,7 @@ shinyServer(function(input, output) {
     
   })
   
-  output$plot4 <- renderPlot({
+  output$plot4b <- renderPlot({
     # base plot
     data <- weeks_14_cn
     lineType <- 'b' 

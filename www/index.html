@@ -4,10 +4,7 @@
   <script src="shared/jquery.js" type="text/javascript"></script>
   <script src="shared/shiny.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="shared/shiny.css"/>
-  <link rel="stylesheet" type="text/css" href="bootstrap-3/css/bootstrap.css"/>
-  <link rel="stylesheet" type="text/css" href="bootstrap-3/css/tabs.css"/>
-  <link rel="stylesheet" type="text/css" href="bootstrap-3/css/tabstyles.css"/>
-  
+  <link rel="stylesheet" type="text/css" href="bootstrap-3/css/bootstrap.css"/>  
   
   <!--<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>-->
   <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
@@ -202,35 +199,21 @@
   <div class="row">
     <div class="container">
       <div id="expenses">
-        <h3 style="font-family: 'Ubuntu', sans-serif;font-size:24px;"><span style="border-bottom:1px solid gray;">Cafe Expenses</span></h3>
-        <br />
-        <div class="tabs tabs-style-underline">
-          <nav>
-            <ul>
-              <li class="tab-current">
-                <a class="icon icon-home" href="" style="text-decoration:none;border-left:1px solid lightgray;border-bottom:1px solid lightgray;"><span style="font-size:20px;font-weight:300;">Home</span></a>
-              </li>
-              <li>
-                <a class="icon icon-home" href="" style="text-decoration:none;border-left:1px solid lightgray;border-bottom:1px solid lightgray;"><span style="font-size:20px;font-weight:300;">Salary's</span></a>
-              </li>
-              <li>
-                <a class="icon icon-home" href="" style="text-decoration:none;border-left:1px solid lightgray;border-bottom:1px solid lightgray;"><span style="font-size:20px;font-weight:300;">Food</span></a>
-              </li>
-              <li>
-                <a class="icon icon-home" href="" style="text-decoration:none;border-left:1px solid lightgray;border-bottom:1px solid lightgray;"><span style="font-size:20px;font-weight:300;">Equipment</span></a>
-              </li>
-              <li>
-                <a class="icon icon-home" href="" style="text-decoration:none;border-left:1px solid lightgray;border-right:1px solid lightgray;border-bottom:1px solid lightgray;"><span style="font-size:20px;font-weight:300;">Other</span></a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <h3 style="font-family: 'Ubuntu', sans-serif;font-size:24px;"><span style="border-bottom:1px solid gray;">Cafe Expenses</span></h3>        
       </div>
     </div>
   </div>
   
   <div class="row "><br /></div>
-  
+
+  <div class="row">
+    <div class="container">
+      <div class="col-md-12"> 
+        <div id="plot3" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="row"><div class="container"><hr style="background-color:black;color:black;"/></div></div>
   
   <div class="row">
@@ -246,10 +229,10 @@
   <div class="row">
     <div class="container">
       <div class="col-md-4"> 
-        <div id="plot3" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
+        <div id="plot4a" class="shiny-plot-output" style="width: 100%; height: 300px"></div>
       </div>
       <div class="col-md-8"> 
-        <div id="plot4" class="shiny-plot-output" style="width: 100%; height: 300px"></div>  
+        <div id="plot4b" class="shiny-plot-output" style="width: 100%; height: 300px"></div>  
       </div>
     </div>
   </div>
@@ -287,7 +270,6 @@
   <!-- scripts -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="bootstrap-3/js/bootstrap.min.js"></script>
-  <script src="bootstrap-3/js/cbpFWTabs.js"></script>
   
   <script>
     function scrollNav() {
