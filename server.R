@@ -23,6 +23,8 @@ exp_yr_14 <- subset(cafe_expenses, Year == 14)
 exp_yr_13 <- subset(cafe_expenses, Year == 13) 
 
 # create 'Monthly' figures
+exp_yr_13$Month <- factor(exp_yr_13$Month, levels=c('Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar'))
+exp_yr_14$Month <- factor(exp_yr_14$Month, levels=c('Apr','May','June','July','Aug','Sept','Oct','Nov','Dec','Jan','Feb','Mar'))
 exp_13_mths <- data.frame(Month=character(0),Total=integer(0))
 exp_14_mths <- data.frame(Month=character(0),Total=integer(0))
 for (i in 1:12) {
@@ -200,7 +202,7 @@ shinyServer(function(input, output) {
     lineType <- 'b' 
     xLabel <- 'Month'
     yRange <- c(0,8000)
-    m <- ggplot(data,aes(x=Month,y=Total))
+    m <- ggplot(data,aes(x=Month,y=Total,group=1))
     m <- m + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,9000) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
     m <- m + geom_line(data=exp_13_mths,aes(x=Month,y=Total),alpha = 0.3) + geom_point(data=exp_13_mths,aes(x=Month,y=Total),size=4,alpha=0.2)
     m <- m + labs(title='Cafe Expenses - 2013 / 2014',x='Month',y='Amount')
