@@ -23,13 +23,13 @@ exp_yr_14 <- subset(cafe_expenses, Year == 14)
 exp_yr_13 <- subset(cafe_expenses, Year == 13) 
 
 # create 'Monthly' figures
-exp_13_mths <- data.frame(Month=integer(0),Total=integer(0))
-exp_14_mths <- data.frame(Month=integer(0),Total=integer(0))
+exp_13_mths <- data.frame(Month=character(0),Total=integer(0))
+exp_14_mths <- data.frame(Month=character(0),Total=integer(0))
 for (i in 1:12) {
-  exp_13_mths <- rbind(exp_13_mths,data.frame(Month=i,Total=rowSums( exp_yr_13[i,3:21],na.rm=TRUE ) ) )
+  exp_13_mths <- rbind(exp_13_mths,data.frame(Month = exp_yr_13[i,2],Total=rowSums( exp_yr_13[i,3:21] ) ) )
 }
 for (i in 1:12) {
-  exp_14_mths <- rbind(exp_14_mths,data.frame(Month=i,Total=rowSums( exp_yr_14[i,3:21],na.rm=TRUE ) ) )
+  exp_14_mths <- rbind(exp_14_mths,data.frame(Month = exp_yr_14[i,2],Total=rowSums( exp_yr_14[i,3:21] ) ) )
 }
 
 # cafe income - get data / pre-process
@@ -41,6 +41,7 @@ cafe_income <- read.csv('data/income_2013-14.csv', header=TRUE,sep=',')
 yr_14 <- subset(cafe_income, Year == 14) 
 yr_13 <- subset(cafe_income, Year == 13) 
 yr_13$Day <- factor(yr_13$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+yr_14$Day <- factor(yr_14$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
 inc <- yr_14
 
 # create 'Week' / 'Monthly' figures
@@ -200,7 +201,7 @@ shinyServer(function(input, output) {
     xLabel <- 'Month'
     yRange <- c(0,8000)
     m <- ggplot(data,aes(x=Month,y=Total))
-    m <- m + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
+    m <- m + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,9000) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))
     m <- m + geom_line(data=exp_13_mths,aes(x=Month,y=Total),alpha = 0.3) + geom_point(data=exp_13_mths,aes(x=Month,y=Total),size=4,alpha=0.2)
     m <- m + labs(title='Cafe Expenses - 2013 / 2014',x='Month',y='Amount')
     
