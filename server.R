@@ -44,7 +44,6 @@ yr_14 <- subset(cafe_income, Year == 14)
 yr_13 <- subset(cafe_income, Year == 13) 
 yr_13$Day <- factor(yr_13$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
 yr_14$Day <- factor(yr_14$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
-inc <- yr_14
 
 # create 'Week' / 'Monthly' figures
 weeks_14     <- aggregate(Total~Week,data=yr_14,FUN=sum, na.rm=FALSE, na.action=NULL)
@@ -55,33 +54,13 @@ weeks_13_cn  <- aggregate(CustNumbers~Week,data=yr_13,FUN=sum, na.rm=FALSE, na.a
 months_13    <- aggregate(Total~Month,data=yr_13,FUN=sum)
 
 # forecast data 
-# cafe sales - assumes takings of 43,330 for the year - 833.27 per week.
-curr_month <- 3
-cfs_forecast <- c(1:52)
-cfs_forecast[1:52] <- 833.27
-df.cfs_forecast <- data.frame(Week=integer(0),Total=integer(0))
-for (i in 1:52) {
-  df.cfs_forecast <- rbind(df.cfs_forecast,data.frame(Week=i,Total=cfs_forecast[i]))
-}
+# -- not used currently --
 
-# project income / expenses - current data will always be at the 'end'
-pinc_forecast  <- c(1:12)
-pexp_forecast  <- c(1:12)
-pprof_forecast <- c(1:12)
-start <- 12 - curr_month
-pinc_forecast[1:start] <- NA
-start <- (12 - curr_month) + 1 
-pinc_forecast[start:12] <- 6911.83 
-start <- 12 - curr_month
-pexp_forecast[1:start] <- NA
-start <- (12 - curr_month) + 1 
-pexp_forecast[start:12] <- 6776.33 
-
-# income - create 'monthly (weekly/daily) averages and max/min' dataframe
-df.summary <- data.frame(total=integer(0),weekly_avg=integer(0),daily_avg=integer(0),max=integer(0),min=integer(0))
+# income - create 'monthly (weekly/daily) averages and max/min' dataframe (currently only for '14')
+df.inc_14.summary <- data.frame(total=integer(0),weekly_avg=integer(0),daily_avg=integer(0),max=integer(0),min=integer(0))
 x <- c()
 for( i in 1:12) {
-  stuff <- subset(inc, Month == i) 
+  stuff <- subset(yr_14, Month == i) 
   y <- ddply(stuff,.(Month,Week,Day),summarize,Total=sum(Total))
   z <- ddply(stuff,.(Month,Week),summarize,Total=sum(Total))
   a <- sum(y$Total)
@@ -92,23 +71,23 @@ for( i in 1:12) {
   e <- mean(z$Total)
   e <- round(e,digits=2)
   x <- data.frame(total=a,weekly_avg=e,daily_avg=b,max=c,min=d)
-  df.summary <- rbind(df.summary,x)
+  df.inc_14.summary <- rbind(df.inc_14.summary,x)
 } 
 
 # income - create monthly average vector - assumes '4/4/5' x 4
 wk_avg <- c(1:52)
-wk_avg[1:4]   <- df.summary$weekly_avg[1]
-wk_avg[5:8]   <- df.summary$weekly_avg[2]
-wk_avg[9:13]  <- df.summary$weekly_avg[3]
-wk_avg[14:17] <- df.summary$weekly_avg[4]
-wk_avg[18:21] <- df.summary$weekly_avg[5]
-wk_avg[22:26] <- df.summary$weekly_avg[6]
-wk_avg[27:30] <- df.summary$weekly_avg[7]
-wk_avg[31:34] <- df.summary$weekly_avg[8]
-wk_avg[35:39] <- df.summary$weekly_avg[9]
-wk_avg[40:43] <- df.summary$weekly_avg[10]
-wk_avg[44:47] <- df.summary$weekly_avg[11]
-wk_avg[48:52] <- df.summary$weekly_avg[12]
+wk_avg[1:4]   <- df.inc_14.summary$weekly_avg[1]
+wk_avg[5:8]   <- df.inc_14.summary$weekly_avg[2]
+wk_avg[9:13]  <- df.inc_14.summary$weekly_avg[3]
+wk_avg[14:17] <- df.inc_14.summary$weekly_avg[4]
+wk_avg[18:21] <- df.inc_14.summary$weekly_avg[5]
+wk_avg[22:26] <- df.inc_14.summary$weekly_avg[6]
+wk_avg[27:30] <- df.inc_14.summary$weekly_avg[7]
+wk_avg[31:34] <- df.inc_14.summary$weekly_avg[8]
+wk_avg[35:39] <- df.inc_14.summary$weekly_avg[9]
+wk_avg[40:43] <- df.inc_14.summary$weekly_avg[10]
+wk_avg[44:47] <- df.inc_14.summary$weekly_avg[11]
+wk_avg[48:52] <- df.inc_14.summary$weekly_avg[12]
 
 # calculate takings details
 cafe_inc_avg_13 <- mean(weeks_13$Total,na.rm=TRUE)
@@ -124,7 +103,7 @@ cafe_min <- subset(weeks_14,Total > 0)
 cafe_inc_min_14 <- min(cafe_min$Total,na.rm=TRUE)
 cafe_inc_min_14 <- round(cafe_inc_min_14,digits=2)
 
-# create variance data for 2013 / 2014
+# create takings variance data for 2013 / 2014
 yr_13_Var <- yr_13
 yr_13_Var$Month <- factor(yr_13_Var$Month, labels = graphx_labels)
 yr_14_Var <- yr_14
