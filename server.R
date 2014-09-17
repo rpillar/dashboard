@@ -36,7 +36,10 @@ for (i in 1:12) {
 
 # cafe income - get data / pre-process
 #-------------------------------------
+# need some way of working these out ...
 curr_yr <- 14
+curr_wk <- 21
+
 cafe_income <- read.csv('data/income_2013-14.csv', header=TRUE,sep=',')
 
 # subset - yr_14 / yr_13
@@ -102,6 +105,25 @@ cafe_inc_min_13 <- round(cafe_inc_min_13,digits=2)
 cafe_min <- subset(weeks_14,Total > 0)
 cafe_inc_min_14 <- min(cafe_min$Total,na.rm=TRUE)
 cafe_inc_min_14 <- round(cafe_inc_min_14,digits=2)
+
+# create latest week df (and weeks -1, -2 and -3 )
+df.wk_inc <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc$Day <- factor(df.wk_inc$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+df.wk_inc_1 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-1 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_1$Day <- factor(df.wk_inc_1$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+df.wk_inc_2 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-2 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_2$Day <- factor(df.wk_inc_2$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+df.wk_inc_3 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-3 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_3$Day <- factor(df.wk_inc_3$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+
+df.wk_inc_13 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13$Day <- factor(df.wk_inc_13$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+df.wk_inc_13_1 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-1 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13_1$Day <- factor(df.wk_inc_13_1$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+df.wk_inc_13_2 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-2 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13_2$Day <- factor(df.wk_inc_13_2$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
+df.wk_inc_13_3 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-3 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13_3$Day <- factor(df.wk_inc_13_3$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
 
 # create takings variance data for 2013 / 2014
 yr_13_Var <- yr_13
@@ -171,6 +193,66 @@ shinyServer(function(input, output) {
     
     # display plot
     print(l)
+  })
+  
+  output$plot2c <- renderPlot({
+    # base plot
+    data <- df.wk_inc
+    lineType <- 'b' 
+    xLabel <- 'Day'
+    yRange <- c(0,300)
+    n <- ggplot(data,aes(x=Day,y=Total,group=1))
+    n <- n + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'gray'))
+    n <- n + geom_line(data = df.wk_inc_13,aes(x=Day,y=Total),alpha = 0.3) + geom_point(data=df.wk_inc_13,aes(x=Day,y=Total),size=4,alpha=0.2)
+    n <- n + labs(title=paste('Daily Takings - Week ',curr_wk),x='Day',y='Amount')
+    
+    # display plot
+    print(n)
+  })
+  
+  output$plot2d <- renderPlot({
+    # base plot
+    data <- df.wk_inc_1
+    lineType <- 'b' 
+    xLabel <- 'Day'
+    yRange <- c(0,300)
+    o <- ggplot(data,aes(x=Day,y=Total,group=1))
+    o <- o + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'gray'))
+    o <- o + geom_line(data = df.wk_inc_13_1,aes(x=Day,y=Total),alpha = 0.3) + geom_point(data=df.wk_inc_13_1,aes(x=Day,y=Total),size=4,alpha=0.2)
+    o <- o + labs(title=paste('Daily Takings - Week ',curr_wk - 1),x='Day',y='Amount')
+    
+    # display plot
+    print(o)
+  })
+  
+  output$plot2e <- renderPlot({
+    # base plot
+    data <- df.wk_inc_2
+    lineType <- 'b' 
+    xLabel <- 'Day'
+    yRange <- c(0,300)
+    p <- ggplot(data,aes(x=Day,y=Total,group=1))
+    p <- p + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'gray'))
+    p <- p + geom_line(data = df.wk_inc_13_2,aes(x=Day,y=Total),alpha = 0.3) + geom_point(data=df.wk_inc_13_2,aes(x=Day,y=Total),size=4,alpha=0.2)
+    p <- p + labs(title=paste('Daily Takings - Week ',curr_wk - 2),x='Day',y='Amount')
+    
+    # display plot
+    print(p)
+  })
+  
+  output$plot2f <- renderPlot({
+    # base plot
+    data <- df.wk_inc_3
+    lineType <- 'b' 
+    xLabel <- 'Day'
+    yRange <- c(0,300)
+    q <- ggplot(data,aes(x=Day,y=Total,group=1))
+    q <- q + geom_line(na.rm=TRUE,color='blue') + geom_point(size=4,color='blue',alpha=0.3,na.rm=TRUE) + ylim(0,500) + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'gray'))
+    q <- q + geom_line(data = df.wk_inc_13_3,aes(x=Day,y=Total),alpha = 0.3) + geom_point(data=df.wk_inc_13_3,aes(x=Day,y=Total),size=4,alpha=0.2)
+    q <- q + labs(title=paste('Daily Takings - Week ',curr_wk - 3),x='Day',y='Amount')
+    
+    # display plot
+    print(q)
   })
   
   ## expenses ##
