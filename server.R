@@ -279,7 +279,8 @@ shinyServer(function(input, output) {
     data <- yr_13
     yRange <- c(0,600)
     j <- ggplot(data,aes(x=Day,y=CustNumbers))
-    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Blues') + labs(title='Customers (by Day) - 2014',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
+    #j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Set2') + labs(title='Customers (by Day) - 2014',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
+    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + labs(title='Customers (by Day) - 2014',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
     
     # display plot
     print(j)
