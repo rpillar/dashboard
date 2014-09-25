@@ -34,6 +34,12 @@ for (i in 1:12) {
   exp_14_mths <- rbind(exp_14_mths,data.frame(Month = exp_yr_14[i,2],Total=rowSums( exp_yr_14[i,3:21] ) ) )
 }
 
+# calculate expenses details
+food_exp_tot_14 <- sum(exp_yr_14$Food,na.rm=TRUE)
+food_exp_tot_14 <- round(food_exp_tot_14,digits=2)
+food_exp_avg_14 <- mean(exp_yr_14$Food,na.rm=TRUE)
+food_exp_avg_14 <- round(food_exp_avg_14,digits=2)
+
 # cafe income - get data / pre-process
 #-------------------------------------
 # need some way of working these out ...
@@ -270,6 +276,20 @@ shinyServer(function(input, output) {
     
     # display plot
     print(m)
+  })
+  
+  output$food_tot <- renderText({ food_exp_tot_14 })
+  output$food_avg <- renderText({ food_exp_avg_14 })
+  
+  output$food_graph <- renderPlot({
+    # base plot
+    data <- exp_yr_14
+    n <- ggplot(data,aes(x=Month,y=Food))
+    n <- n + geom_bar(stat='identity',na.rm=TRUE,color='blue') + theme_bw() + theme(panel.border = element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank())
+    
+    # display plot
+    print(n)
+    
   })
   
   ## customer details ##
