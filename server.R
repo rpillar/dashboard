@@ -35,10 +35,20 @@ for (i in 1:12) {
 }
 
 # calculate expenses details
+payr_exp_tot_14 <- sum(exp_yr_14$Payroll,na.rm=TRUE)
+payr_exp_tot_14 <- round(payr_exp_tot_14,digits=2)
+payr_exp_avg_14 <- mean(exp_yr_14$Payroll,na.rm=TRUE)
+payr_exp_avg_14 <- round(payr_exp_avg_14,digits=2)
+
 food_exp_tot_14 <- sum(exp_yr_14$Food,na.rm=TRUE)
 food_exp_tot_14 <- round(food_exp_tot_14,digits=2)
 food_exp_avg_14 <- mean(exp_yr_14$Food,na.rm=TRUE)
 food_exp_avg_14 <- round(food_exp_avg_14,digits=2)
+
+util_exp_tot_14 <- sum(exp_yr_14$Utilities,na.rm=TRUE)
+util_exp_tot_14 <- round(util_exp_tot_14,digits=2)
+util_exp_avg_14 <- mean(exp_yr_14$Utilities,na.rm=TRUE)
+util_exp_avg_14 <- round(util_exp_avg_14,digits=2)
 
 # cafe income - get data / pre-process
 #-------------------------------------
@@ -66,37 +76,37 @@ months_13    <- aggregate(Total~Month,data=yr_13,FUN=sum)
 # -- not used currently --
 
 # income - create 'monthly (weekly/daily) averages and max/min' dataframe (currently only for '14')
-df.inc_14.summary <- data.frame(total=integer(0),weekly_avg=integer(0),daily_avg=integer(0),max=integer(0),min=integer(0))
-x <- c()
-for( i in 1:12) {
-  stuff <- subset(yr_14, Month == i) 
-  y <- ddply(stuff,.(Month,Week,Day),summarize,Total=sum(Total))
-  z <- ddply(stuff,.(Month,Week),summarize,Total=sum(Total))
-  a <- sum(y$Total)
-  b <- mean(y$Total)
-  b <- round(b,digits=2)
-  c <- max(y$Total,na.rm=FALSE)
-  d <- min(y$Total,na.rm=FALSE)
-  e <- mean(z$Total)
-  e <- round(e,digits=2)
-  x <- data.frame(total=a,weekly_avg=e,daily_avg=b,max=c,min=d)
-  df.inc_14.summary <- rbind(df.inc_14.summary,x)
-} 
+#df.inc_14.summary <- data.frame(total=integer(0),weekly_avg=integer(0),daily_avg=integer(0),max=integer(0),min=integer(0))
+#x <- c()
+#for( i in 1:12) {
+#  stuff <- subset(yr_14, Month == i) 
+#  y <- ddply(stuff,.(Month,Week,Day),summarize,Total=sum(Total))
+#  z <- ddply(stuff,.(Month,Week),summarize,Total=sum(Total))
+#  a <- sum(y$Total)
+#  b <- mean(y$Total)
+#  b <- round(b,digits=2)
+#  c <- max(y$Total,na.rm=FALSE)
+#  d <- min(y$Total,na.rm=FALSE)
+#  e <- mean(z$Total)
+#  e <- round(e,digits=2)
+#  x <- data.frame(total=a,weekly_avg=e,daily_avg=b,max=c,min=d)
+#  df.inc_14.summary <- rbind(df.inc_14.summary,x)
+#} 
 
 # income - create monthly average vector - assumes '4/4/5' x 4
-wk_avg <- c(1:52)
-wk_avg[1:4]   <- df.inc_14.summary$weekly_avg[1]
-wk_avg[5:8]   <- df.inc_14.summary$weekly_avg[2]
-wk_avg[9:13]  <- df.inc_14.summary$weekly_avg[3]
-wk_avg[14:17] <- df.inc_14.summary$weekly_avg[4]
-wk_avg[18:21] <- df.inc_14.summary$weekly_avg[5]
-wk_avg[22:26] <- df.inc_14.summary$weekly_avg[6]
-wk_avg[27:30] <- df.inc_14.summary$weekly_avg[7]
-wk_avg[31:34] <- df.inc_14.summary$weekly_avg[8]
-wk_avg[35:39] <- df.inc_14.summary$weekly_avg[9]
-wk_avg[40:43] <- df.inc_14.summary$weekly_avg[10]
-wk_avg[44:47] <- df.inc_14.summary$weekly_avg[11]
-wk_avg[48:52] <- df.inc_14.summary$weekly_avg[12]
+#wk_avg <- c(1:52)
+#wk_avg[1:4]   <- df.inc_14.summary$weekly_avg[1]
+#wk_avg[5:8]   <- df.inc_14.summary$weekly_avg[2]
+#wk_avg[9:13]  <- df.inc_14.summary$weekly_avg[3]
+#wk_avg[14:17] <- df.inc_14.summary$weekly_avg[4]
+#wk_avg[18:21] <- df.inc_14.summary$weekly_avg[5]
+#wk_avg[22:26] <- df.inc_14.summary$weekly_avg[6]
+#wk_avg[27:30] <- df.inc_14.summary$weekly_avg[7]
+#wk_avg[31:34] <- df.inc_14.summary$weekly_avg[8]
+#wk_avg[35:39] <- df.inc_14.summary$weekly_avg[9]
+#wk_avg[40:43] <- df.inc_14.summary$weekly_avg[10]
+#wk_avg[44:47] <- df.inc_14.summary$weekly_avg[11]
+#wk_avg[48:52] <- df.inc_14.summary$weekly_avg[12]
 
 # calculate takings details
 cafe_inc_avg_13 <- mean(weeks_13$Total,na.rm=TRUE)
@@ -106,29 +116,29 @@ cafe_inc_avg_14 <- round(cafe_inc_avg_14,digits=2)
 cafe_inc_max_13 <- max(weeks_13$Total,na.rm=TRUE)
 cafe_inc_max_14 <- max(weeks_14$Total,na.rm=TRUE)
 cafe_min <- subset(weeks_13,Total > 0)
-cafe_inc_min_13 <- min(cafe_min$Total,na.rm=TRUE)
+cafe_inc_min_13 <- min(cafe_min$Total,na.rm=FALSE)
 cafe_inc_min_13 <- round(cafe_inc_min_13,digits=2)
 cafe_min <- subset(weeks_14,Total > 0)
-cafe_inc_min_14 <- min(cafe_min$Total,na.rm=TRUE)
+cafe_inc_min_14 <- min(cafe_min$Total,na.rm=FALSE)
 cafe_inc_min_14 <- round(cafe_inc_min_14,digits=2)
 
 # create latest week df (and weeks -1, -2 and -3 )
-df.wk_inc <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc$Day <- factor(df.wk_inc$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
-df.wk_inc_1 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-1 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_1 <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk-1 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc_1$Day <- factor(df.wk_inc_1$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
-df.wk_inc_2 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-2 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_2 <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk-2 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc_2$Day <- factor(df.wk_inc_2$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
-df.wk_inc_3 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-3 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_3 <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk-3 & Year == curr_yr),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc_3$Day <- factor(df.wk_inc_3$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
 
-df.wk_inc_13 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13 <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc_13$Day <- factor(df.wk_inc_13$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
-df.wk_inc_13_1 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-1 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13_1 <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk-1 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc_13_1$Day <- factor(df.wk_inc_13_1$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
-df.wk_inc_13_2 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-2 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13_2 <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk-2 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc_13_2$Day <- factor(df.wk_inc_13_2$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
-df.wk_inc_13_3 <- aggregate(Total~Day,data=subset(cafe_inc,Week == curr_wk-3 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
+df.wk_inc_13_3 <- aggregate(Total~Day,data=subset(cafe_income,Week == curr_wk-3 & Year == curr_yr-1),FUN=sum,na.rm=TRUE,na.action=NULL)
 df.wk_inc_13_3$Day <- factor(df.wk_inc_13_3$Day, levels=c('Tues','Wed','Thurs','Fri','Sat'))
 
 # create takings variance data for 2013 / 2014
@@ -278,17 +288,46 @@ shinyServer(function(input, output) {
     print(m)
   })
   
+  output$payr_tot <- renderText({ payr_exp_tot_14 })
+  output$payr_avg <- renderText({ payr_exp_avg_14 })
+  
+  output$payr_graph <- renderPlot({
+    # base plot
+    data <- exp_yr_14
+    n <- ggplot(data,aes(x=Month,y=Payroll,fill=Month))
+    #n <- n + geom_bar(stat='identity',na.rm=TRUE,fill="#9999FF") + ylim(0,2000) + theme_bw() + theme(panel.border = element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position="none")
+    n <- n + geom_bar(stat='identity',na.rm=TRUE,fill="#9999FF") + theme_bw() + theme(panel.border = element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position="none")
+    
+    # display plot
+    print(n)
+    
+  })
+  
   output$food_tot <- renderText({ food_exp_tot_14 })
   output$food_avg <- renderText({ food_exp_avg_14 })
   
   output$food_graph <- renderPlot({
     # base plot
     data <- exp_yr_14
-    n <- ggplot(data,aes(x=Month,y=Food))
-    n <- n + geom_bar(stat='identity',na.rm=TRUE,color='blue') + theme_bw() + theme(panel.border = element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank())
+    o <- ggplot(data,aes(x=Month,y=Food,fill=Month))
+    o <- o + geom_bar(stat='identity',na.rm=TRUE,fill="#9999FF") + ylim(0,2000) + theme_bw() + theme(panel.border = element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position="none")
     
     # display plot
-    print(n)
+    print(o)
+    
+  })
+  
+  output$util_tot <- renderText({ util_exp_tot_14 })
+  output$util_avg <- renderText({ util_exp_avg_14 })
+  
+  output$util_graph <- renderPlot({
+    # base plot
+    data <- exp_yr_14
+    p <- ggplot(data,aes(x=Month,y=Utilities,fill=Month))
+    p <- p + geom_bar(stat='identity',na.rm=TRUE,fill="#9999FF") + ylim(0,1000) + theme_bw() + theme(panel.border = element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks.x=element_blank(),axis.ticks.y=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position="none")
+    
+    # display plot
+    print(p)
     
   })
   
