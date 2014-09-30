@@ -44,15 +44,19 @@ payr_exp_avg_14  <- round(payr_exp_avg_14,digits=2)
 payr_exp_perc_14 <- (payr_exp_tot_14 / exp_14_total) * 100
 payr_exp_perc_14<- round(payr_exp_perc_14,digits=2)
 
-food_exp_tot_14 <- sum(exp_yr_14$Food,na.rm=TRUE)
-food_exp_tot_14 <- round(food_exp_tot_14,digits=2)
-food_exp_avg_14 <- mean(exp_yr_14$Food,na.rm=TRUE)
-food_exp_avg_14 <- round(food_exp_avg_14,digits=2)
+food_exp_tot_14  <- sum(exp_yr_14$Food,na.rm=TRUE)
+food_exp_tot_14  <- round(food_exp_tot_14,digits=2)
+food_exp_avg_14  <- mean(exp_yr_14$Food,na.rm=TRUE)
+food_exp_avg_14  <- round(food_exp_avg_14,digits=2)
+food_exp_perc_14 <- (food_exp_tot_14 / exp_14_total) * 100
+food_exp_perc_14 <- round(food_exp_perc_14,digits=2)
 
 util_exp_tot_14 <- sum(exp_yr_14$Utilities,na.rm=TRUE)
 util_exp_tot_14 <- round(util_exp_tot_14,digits=2)
 util_exp_avg_14 <- mean(exp_yr_14$Utilities,na.rm=TRUE)
 util_exp_avg_14 <- round(util_exp_avg_14,digits=2)
+util_exp_perc_14 <- (util_exp_tot_14 / exp_14_total) * 100
+util_exp_perc_14 <- round(util_exp_perc_14,digits=2)
 
 # cafe income - get data / pre-process
 #-------------------------------------
@@ -310,6 +314,7 @@ shinyServer(function(input, output) {
   
   output$food_tot <- renderText({ food_exp_tot_14 })
   output$food_avg <- renderText({ food_exp_avg_14 })
+  output$food_perc <- renderText({ paste(food_exp_perc_14,'%') })
   
   output$food_graph <- renderPlot({
     # base plot
@@ -324,6 +329,7 @@ shinyServer(function(input, output) {
   
   output$util_tot <- renderText({ util_exp_tot_14 })
   output$util_avg <- renderText({ util_exp_avg_14 })
+  output$util_perc <- renderText({ paste(util_exp_perc_14,'%') })
   
   output$util_graph <- renderPlot({
     # base plot
@@ -344,7 +350,7 @@ shinyServer(function(input, output) {
     yRange <- c(0,600)
     j <- ggplot(data,aes(x=Day,y=CustNumbers))
     #j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='Set2') + labs(title='Customers (by Day) - 2014',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
-    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + labs(title='Customers (by Day) - 2014',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
+    j <- j + geom_bar(aes(fill=Day),stat='identity',na.rm=TRUE) + scale_fill_brewer(palette='BuGn') + labs(title='Customers (by Day) - 2014',x='Day',y='Customers') + theme_bw() + theme(panel.border = element_blank()) + theme(axis.line = element_line(color = 'black'))    
     
     # display plot
     print(j)
