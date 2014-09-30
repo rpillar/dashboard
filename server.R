@@ -35,10 +35,14 @@ for (i in 1:12) {
 }
 
 # calculate expenses details
-payr_exp_tot_14 <- sum(exp_yr_14$Payroll,na.rm=TRUE)
-payr_exp_tot_14 <- round(payr_exp_tot_14,digits=2)
-payr_exp_avg_14 <- mean(exp_yr_14$Payroll,na.rm=TRUE)
-payr_exp_avg_14 <- round(payr_exp_avg_14,digits=2)
+exp_14_total <- sum(exp_14_mths$Total,na.rm=TRUE)
+
+payr_exp_tot_14  <- sum(exp_yr_14$Payroll,na.rm=TRUE)
+payr_exp_tot_14  <- round(payr_exp_tot_14,digits=2)
+payr_exp_avg_14  <- mean(exp_yr_14$Payroll,na.rm=TRUE)
+payr_exp_avg_14  <- round(payr_exp_avg_14,digits=2)
+payr_exp_perc_14 <- (payr_exp_tot_14 / exp_14_total) * 100
+payr_exp_perc_14<- round(payr_exp_perc_14,digits=2)
 
 food_exp_tot_14 <- sum(exp_yr_14$Food,na.rm=TRUE)
 food_exp_tot_14 <- round(food_exp_tot_14,digits=2)
@@ -288,8 +292,9 @@ shinyServer(function(input, output) {
     print(m)
   })
   
-  output$payr_tot <- renderText({ payr_exp_tot_14 })
-  output$payr_avg <- renderText({ payr_exp_avg_14 })
+  output$payr_tot  <- renderText({ payr_exp_tot_14 })
+  output$payr_avg  <- renderText({ payr_exp_avg_14 })
+  output$payr_perc <- renderText({ paste(payr_exp_perc_14,'%') })
   
   output$payr_graph <- renderPlot({
     # base plot
